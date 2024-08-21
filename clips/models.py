@@ -13,17 +13,6 @@ class Clip(models.Model):
     keywords = models.TextField()
     summary = models.TextField()
 
-    def __init__(self, clip_id, author, audio, time_start):
-        self.clip_id = clip_id
-        self.author = author
-        self.audio = audio
-        self.time_start = time_start
-        self.date = clip_id.split('_')[1]
-        self.transcript = ''
-        self.entities = []
-        self.keywords = []
-        self.summary = ''
-
     def transcribe_audio(self):
         pass
 
