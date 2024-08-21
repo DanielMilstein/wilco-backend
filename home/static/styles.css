@@ -31,7 +31,7 @@
 }
 
 .navbar-nav li {
-    margin-left: 20px;
+    margin-right: 20px;
 }
 
 .navbar-nav li a {
@@ -152,7 +152,7 @@ form h2 {
 
 /* Container for the form */
 .container {
-    padding: 50px 50px;
+    padding: 50px 0;
 }
 
 /* Style for the links in the form */
