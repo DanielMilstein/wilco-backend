@@ -1,35 +1,58 @@
 from django.shortcuts import render, redirect
-from .forms import ReportForm, ReportObjectiveFormSet
-from .models import ReportObjective
+from .forms import ReportForm, ReportObjectiveForm
+from .models import ReportObjective, Report
+
+from django.shortcuts import render, redirect
+from .forms import ReportForm
 
 def create_report(request):
     existing_objectives = ReportObjective.objects.all()
-
     if request.method == 'POST':
-        report_form = ReportForm(request.POST)
-        report_objective_formset = ReportObjectiveFormSet(request.POST)
-
-        if report_form.is_valid():
-            report = report_form.save()
-
-            # Handle existing objective selection
-            selected_objective_id = request.POST.get('report_objective')
-            if selected_objective_id:
-                selected_objective = ReportObjective.objects.get(id=selected_objective_id)
-                report.report_objective = selected_objective
-
-            if report_objective_formset.is_valid():
-                report_objective_formset.instance = report
-                report_objective_formset.save()
-
-            report.save()
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            form.save()
             return redirect('success')  # Redirect to a success page or the desired page
     else:
-        report_form = ReportForm()
-        report_objective_formset = ReportObjectiveFormSet()
+        form = ReportForm()
+    return render(request, 'create_report.html', {'form': form, 'existing_objectives': existing_objectives})
+
+def create_report_objective(request):
+    if request.method == 'POST':
+        report_objective_form = ReportObjectiveForm(request.POST)
+
+        if report_objective_form.is_valid():
+            report_objective_form.save()
+            return redirect('create_report')  # Redirect to the create_report view
+    else:
+        report_objective_form = ReportObjectiveForm()
     
-    return render(request, 'create_report.html', {
-        'report_form': report_form,
-        'report_objective_formset': report_objective_formset,
-        'existing_objectives': existing_objectives,
+    return render(request, 'create_report_objective.html', {
+        'report_objective_form': report_objective_form,
     })
+
+
+
+def list_reports(request):
+    reports = Report.objects.all()
+    return render(request, 'list_reports.html', {'reports': reports})
+
+
+def view_report(request, id):
+    report = Report.objects.get(pk=id)
+    return render(request, 'view_report.html', {'report': report})
+
+
+@api_view(['POST'])
+def create_report(request):
+    if request.method == 'POST':
+        serializer = ReportSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def list_reports(request):
+    reports = Report.objects.all()
+    serializer = ReportSerializer(reports, many=True)
+    return Response(serializer.data)

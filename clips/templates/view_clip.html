@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clip: {{ clip.title }}</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="container">
+        <h2>{{ clip.title }}</h2>
+        <p><strong>Clip ID:</strong> {{ clip.id }}</p>
+        <p><strong>Description:</strong> {{ clip.description }}</p>
+        <!-- Add any other relevant fields related to the clip -->
+
+        <!-- Optionally, include an audio player -->
+        <audio controls>
+            <source src="{{ clip.audio_file.url }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+</body>
+</html>

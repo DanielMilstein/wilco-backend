@@ -5,10 +5,11 @@ from django.forms import modelformset_factory
 class ReportForm(forms.ModelForm):
     class Meta:
         model = Report
-        fields = ['title', 'audio_clips', 'author', 'date']
+        fields = ['title', 'audio_clips', 'author', 'date', 'report_objective']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
             'audio_clips': forms.CheckboxSelectMultiple(),
+            'report_objective': forms.Select(),
         }
     
 
@@ -20,5 +21,3 @@ class ReportObjectiveForm(forms.ModelForm):
             'sentence': forms.Textarea(attrs={'rows': 3}),
         }
 
-
-ReportObjectiveFormSet = modelformset_factory(ReportObjective, form=ReportObjectiveForm, extra=1)

@@ -1,32 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
+# Create your models here.
 class Clip(models.Model):
-    clip_id = models.CharField(max_length=255, primary_key=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    audio = models.FileField()
-    time_start = models.DateTimeField()
-    date = models.DateField()
-    transcript = models.TextField()
-    entities = models.TextField()
-    keywords = models.TextField()
-    summary = models.TextField()
-
-    def transcribe_audio(self):
-        pass
-
-    def extract_entities(self):
-        pass
-
-    def extract_keywords(self):
-        pass
-
-    def summarize(self):
-        pass
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    time_start = models.DateTimeField(null=True)
+    time_end = models.DateTimeField(null=True)
+    duration = models.IntegerField(null=True)
+    date = models.DateField(null=True)
+    transcription = models.TextField()
+    speaker = models.TextField(null=True)
+    score = models.FloatField(null=True)
+    keywords = models.TextField(null=True)
+    summary = models.TextField(null=True)
 
     def __str__(self):
-        return f'Clip {self.clip_id} by {self.author}'
-
-    def __repr__(self):
-        return f'Clip {self.clip_id} by {self.author}'
+        return str(self.id)

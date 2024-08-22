@@ -1,5 +1,3 @@
-<!-- templates/home.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +13,14 @@
     <!-- Main Content -->
     <div class="container main-content">
         <h1>Bienvenido a la plataforma WilCo</h1>
-
+        
+        <div class="buttons">
+            <a href="{% url 'create_report' %}" class="btn">Create Report</a>
+            <a href="{% url 'create_report_objective' %}" class="btn">Create Report Objective</a>
+            <a href="{% url 'list_reports' %}" class="btn">List of Reports</a>
+            <a href="{% url 'list_clips' %}" class="btn">List of Clips</a>
+        </div>
+        
     </div>
 </body>
 </html>

@@ -9,24 +9,9 @@
     <h2>Create a New Report</h2>
     <form method="post">
         {% csrf_token %}
-        {{ report_form.as_p }}
+        {{ form.as_p }}
 
-        <h3>Report Objectives</h3>
 
-        {% if existing_objectives %}
-            <label for="report_objective">Select an existing objective:</label>
-            <select name="report_objective" id="report_objective">
-                {% for objective in existing_objectives %}
-                    <option value="{{ objective.id }}">{{ objective.sentence }}</option>
-                {% endfor %}
-            </select>
-            <h4>Or add a new objective:</h4>
-        {% endif %}
-
-        {{ report_objective_formset.management_form }}
-        {% for form in report_objective_formset %}
-            {{ form.as_p }}
-        {% endfor %}
 
         <button type="submit">Save Report</button>
     </form>
