@@ -58,3 +58,60 @@ def list_reports(request):
     reports = Report.objects.all()
     serializer = ReportSerializer(reports, many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def view_report(request, id):
+    report = Report.objects.get(pk=id)
+    serializer = ReportSerializer(report)
+    return Response(serializer.data)
+
+@api_view(['PUT'])
+def update_report(request, id):
+    report = Report.objects.get(pk=id)
+    serializer = ReportSerializer(report, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+def delete_report(request, id):
+    report = Report.objects.get(pk=id)
+    report.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def list_report_objectives(request):
+    report_objectives = ReportObjective.objects.all()
+    serializer = ReportObjectiveSerializer(report_objectives, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def view_report_objective(request, id):
+    report_objective = ReportObjective.objects.get(pk=id)
+    serializer = ReportObjectiveSerializer(report_objective)
+    return Response(serializer.data)
+
+@api_view(['PUT'])
+def update_report_objective(request, id):
+    report_objective = ReportObjective.objects.get(pk=id)
+    serializer = ReportObjectiveSerializer(report_objective, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+def delete_report_objective(request, id):
+    report_objective = ReportObjective.objects.get(pk=id)
+    report_objective.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['POST'])
+def create_report_objective(request):
+    if request.method == 'POST':
+        serializer = ReportObjectiveSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

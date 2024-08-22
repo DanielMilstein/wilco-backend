@@ -32,3 +32,24 @@ def list_clips(request):
     clips = Clip.objects.all()
     serializer = ClipSerializer(clips, many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def view_clip(request, id):
+    clip = Clip.objects.get(pk=id)
+    serializer = ClipSerializer(clip)
+    return Response(serializer.data)
+
+@api_view(['PUT'])
+def update_clip(request, id):
+    clip = Clip.objects.get(pk=id)
+    serializer = ClipSerializer(clip, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+def delete_clip(request, id):
+    clip = Clip.objects.get(pk=id)
+    clip.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
