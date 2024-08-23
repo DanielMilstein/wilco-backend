@@ -16,6 +16,10 @@
         <p><strong>Description:</strong> {{ clip.description }}</p>
         <!-- Add any other relevant fields related to the clip -->
 
+        <p><strong>Author:</strong> {{ clip.author.username }}</p>
+        <p><strong>Date:</strong> {{ clip.date }}</p>
+        <p><strong>Transcription</strong> {{clip.transcription}} </p>
+
         <!-- Optionally, include an audio player -->
         <audio controls>
             <source src="{{ clip.audio_file.url }}" type="audio/mpeg">
