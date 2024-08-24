@@ -191,11 +191,12 @@ def api_send_report(request):
         )
         file_name = f'{request.data["title"]}.mp3'
         bucket_name = 'tts.clips'
-        region_name = 'us-east-1'
-        file_url = f"https://{bucket_name}.s3.{region_name}.amazonaws.com/{file_name}"
+        # region_name = 'us-east-1'
 
-
-        response.stream_to_file(file_name)
+        response = s3.generate_presigned_url('get_object',
+                                        Params={'Bucket': bucket_name,
+                                                'Key': object_name},
+                                        ExpiresIn=expiration)
 
         try:
             s3.upload_file(file_name, bucket_name, file_name)
@@ -204,7 +205,7 @@ def api_send_report(request):
 
         for phone_number in request.data['phone_numbers']:
             call = twilio_client.calls.create(
-                twiml=f'<Response><Play loop="2">{file_url}</Play></Response>',
+                twiml=f'<Response><Play loop="2">{response}</Play></Response>',
                 to=phone_number,
                 from_=os.environ["TWILIO_PHONE_NUMBER"]
             )
