@@ -12,3 +12,5 @@ whitenoise==6.5.0
 psycopg2-binary
 django_seed
 openai
+twilio 
+django-environ

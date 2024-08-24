@@ -170,3 +170,15 @@ def api_create_report_objective(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def api_send_report(request):
+    if request.method == 'POST':
+        response = client.audio.speech.create(
+            model = 'tts-1-hd',
+            voice = 'onyx',
+            input = request.data['summary']
+        )
+
+        response.stream_to_file(f'{request.data["title"]}.mp3')

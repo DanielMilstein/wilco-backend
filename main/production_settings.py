@@ -136,3 +136,21 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'wilco.mail.chile@gmail.com'
+EMAIL_HOST_PASSWORD = 'foszuc-nuPkeq-6hytfu'
+DEFAULT_FROM_EMAIL = 'wilco.mail.chile@gmail.com'
+
+
+TWILIO_ACCOUNT_SID = os.environ["MY_ACCOUNT_SID"]
+TWILIO_AUTH_TOKEN = os.environ["TWILIO_AUTH_TOKEN"]
+TWILIO_NUMBER = os.environ["MY_TWILIO_NUMBER"]
+SMS_BROADCAST_TO_NUMBERS = [
+   "+56968404532",
+ ]
+
+SMS_BACKEND = 'sms.backends.twilio.SmsBackend'
