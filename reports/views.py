@@ -20,10 +20,6 @@ auth_token = os.environ["TWILIO_AUTH_TOKEN"]
 twilio_client = Client(account_sid, auth_token)
 
 
-
-twilio_client = Client()
-
-
 def create_report(request):
     existing_objectives = ReportObjective.objects.all()
     if request.method == 'POST':
@@ -208,7 +204,7 @@ def api_send_report(request):
 
         for phone_number in request.data['phone_numbers']:
             call = twilio_client.calls.create(
-                twiml=f'<Response><Play>{file_url}</Play></Response>',
+                twiml=f'<Response><Play loop="2">{file_url}</Play></Response>',
                 to=phone_number,
                 from_=os.environ["TWILIO_PHONE_NUMBER"]
             )
