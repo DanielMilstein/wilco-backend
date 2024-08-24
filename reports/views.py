@@ -200,7 +200,7 @@ def api_send_report(request):
         response.stream_to_file(file_name)
 
         try:
-            s3.upload_file(file_name, bucket_name, file_name, ExtraArgs={'ACL': 'public-read', 'GrantRead': 'uri="http://acs.amazonaws.com/groups/global/AllUsers"'})
+            s3.upload_file(file_name, bucket_name, file_name, ExtraArgs={'GrantRead': 'uri="http://acs.amazonaws.com/groups/global/AllUsers"'})
             print(f'{file_url} uploaded to S3')
         except NoCredentialsError:
             print("Credentials not available")
