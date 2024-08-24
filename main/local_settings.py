@@ -128,14 +128,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_REDIRECT_URL = 'home'  # Redirect to home after login
 LOGOUT_REDIRECT_URL = 'home'  # Redirect to home after logout
 
-SMS_BACKEND = 'sms.backends.console.SmsBackend'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'wilco.mail.chile@gmail.com'
-EMAIL_HOST_PASSWORD = 'AIzaSyB_BOLDGG6AO4gKWEFkGOqVMMl8MKnDCZE'
-DEFAULT_FROM_EMAIL = 'wilco.mail.chile@gmail.com'
 
 TWILIO_ACCOUNT_SID = os.environ["MY_ACCOUNT_SID"]
 TWILIO_AUTH_TOKEN = os.environ["TWILIO_AUTH_TOKEN"]

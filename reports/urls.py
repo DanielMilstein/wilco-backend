@@ -16,5 +16,6 @@ urlpatterns = [
     path('api/report_objectives/<int:id>/', views.api_view_report_objective, name='api_view_report_objective'),
     path('api/report_objectives/<int:id>/', views.api_update_report_objective, name='api_update_report_objective'),
     path('api/report_objectives/<int:id>/', views.api_delete_report_objective, name='api_delete_report_objective'),
+    path('api/send_report/', views.api_send_report, name='api_send_report'),
 
 ]

@@ -7,9 +7,21 @@ from rest_framework.response import Response
 from django.shortcuts import render, redirect
 from .forms import ReportForm
 from openai import OpenAI
+import boto3
+from botocore.exceptions import NoCredentialsError
+from twilio.rest import Client
 
-
+# Initialize the S3 client
+s3 = boto3.client('s3')
 client = OpenAI()
+account_sid=os.environ["MY_ACCOUNT_SID"]
+auth_token = os.environ["TWILIO_AUTH_TOKEN"]
+twilio_client = Client(account_sid, auth_token)
+
+
+
+twilio_client = Client()
+
 
 def create_report(request):
     existing_objectives = ReportObjective.objects.all()
@@ -180,5 +192,23 @@ def api_send_report(request):
             voice = 'onyx',
             input = request.data['summary']
         )
+        file_name = f'{request.data["title"]}.mp3'
+        bucket_name = 'tts.clips'
+        region_name = 'us-east-1'
+        file_url = f"https://{bucket_name}.s3.{region_name}.amazonaws.com/{file_name}"
 
-        response.stream_to_file(f'{request.data["title"]}.mp3')
+
+        response.stream_to_file(file_name)
+
+        try:
+            s3.upload_file(file_name, bucket_name, file_name)
+        except NoCredentialsError:
+            print("Credentials not available")
+
+        for phone_number in request.data['phone_numbers']:
+            call = twilio_client.calls.create(
+                twiml=f'<Response><Play>{file_url}</Play></Response>',
+                to=phone_number,
+                from_=os.environ["TWILIO_PHONE_NUMBER"]
+            )
+    return Response(status=status.HTTP_201_CREATED)
