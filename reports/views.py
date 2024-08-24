@@ -199,10 +199,12 @@ def api_send_report(request):
 
         try:
             s3.upload_file(file_name, bucket_name, file_name, ExtraArgs={'ACL': 'public-read'})
+            print(f'{file_url} uploaded to S3')
         except NoCredentialsError:
             print("Credentials not available")
 
         for phone_number in request.data['phone_numbers']:
+            print(f'Sending report to {phone_number}')
             call = twilio_client.calls.create(
                 twiml=f'<Response><Play loop="2">{file_url}</Play></Response>',
                 to=phone_number,
