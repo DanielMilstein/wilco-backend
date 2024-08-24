@@ -60,6 +60,8 @@ def api_create_clip(request):
             #Cuando llega un clip mandar al LLM para ver si encuentra uno de los códigos 
             # de inicio y o término
             response = classify_message(transcription)
+            if response == "0":
+                print("LLamar")
             #Si el código empieza y finaliza, procesar todo de una
 
 
@@ -67,31 +69,7 @@ def api_create_clip(request):
             # variable global y procesarlo después
 
 
-            lista_transcripcion = transcription.split(',')
-            lista_transcripcion_2 = []
-            all_words =[]
-            for palabra in lista_transcripcion:
-                nueva_lista = palabra.split(" ")
-                nueva_palabra = ""
-                for word in nueva_lista:
-                    nueva_palabra += word
-                lista_transcripcion_2.append(nueva_palabra)
-                all_words.append(nueva_palabra)
-
-            combined_words = combinar_palabras(lista_transcripcion_2)
-            for word in combined_words:
-                all_words.append(word)
-
-            print(all_words)
-            codes = ["A7", "R22", "R20"]
-            for word in lista_transcripcion_2:
-                if word in codes:
-                    if word == "A7":
-                        print("Explosión Fábrica")
-                    elif word == "R22":
-                        print("Incendio Forestal con Info")
-                    elif word == "R20":
-                        print("Incendio Forestal")
+           
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
