@@ -202,12 +202,11 @@ def api_send_report(request):
         response.stream_to_file(file_name)
 
         try:
-            s3.upload_file(file_name, bucket_name, file_name, ExtraArgs={'GrantRead': 'uri="http://acs.amazonaws.com/groups/global/AllUsers"'})
+            s3.upload_file(file_name, bucket_name, file_name, ExtraArgs={'GrantRead': 'uri="http://acs.amazonaws.com/groups/global/AllUsers"', 'ContentType': 'audio/mp3'})
             print(f'{file_url} uploaded to S3')
         except NoCredentialsError:
             print("Credentials not available")
 
-        time.sleep(5)  # Delay for 5 seconds to allow the file to be uploaded to S3 
 
         for phone_number in request.data['phone_numbers']:
             print(f'Sending report to {phone_number}')
