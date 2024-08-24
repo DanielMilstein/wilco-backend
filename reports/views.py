@@ -11,7 +11,6 @@ import boto3
 from botocore.exceptions import NoCredentialsError
 from twilio.rest import Client
 import os
-import s3
 
 # Initialize the S3 client
 s3 = boto3.client('s3')
@@ -192,24 +191,20 @@ def api_send_report(request):
         )
         file_name = f'{request.data["title"]}.mp3'
         bucket_name = 'tts.clips'
-
-
-        response = s3.generate_presigned_url('get_object',
-                                        Params={'Bucket': bucket_name,
-                                                'Key': object_name},
-                                        ExpiresIn=expiration)
+        region_name = 'us-east-1'
+        file_url = f"https://{bucket_name}.s3.{region_name}.amazonaws.com/{file_name}"
 
 
         response.stream_to_file(file_name)
 
         try:
-            s3.upload_file(file_name, bucket_name, file_name)
+            s3.upload_file(file_name, bucket_name, file_name, ExtraArgs={'ACL': 'public-read'})
         except NoCredentialsError:
             print("Credentials not available")
 
         for phone_number in request.data['phone_numbers']:
             call = twilio_client.calls.create(
-                twiml=f'<Response><Play loop="2">{response}</Play></Response>',
+                twiml=f'<Response><Play loop="2">{file_url}</Play></Response>',
                 to=phone_number,
                 from_=os.environ["TWILIO_PHONE_NUMBER"]
             )
