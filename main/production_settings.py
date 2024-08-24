@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     "corsheaders",
     'home', 
     'clips',
-    'reports',
 ]
 
 MIDDLEWARE = [
