@@ -10,6 +10,7 @@ from openai import OpenAI
 import boto3
 from botocore.exceptions import NoCredentialsError
 from twilio.rest import Client
+import os
 
 # Initialize the S3 client
 s3 = boto3.client('s3')
