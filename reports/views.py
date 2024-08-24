@@ -192,16 +192,15 @@ def api_send_report(request):
             input = disclaimer + request.data['summary']
         )
 
-        file_name = f'{request.data["title"]}.wav'
+        file_name = f'{request.data["title"]}.mp3'
         bucket_name = 'tts.clips'
-        region_name = 'us-east-1'
-        file_url = f"https://{bucket_name}.s3.{region_name}.amazonaws.com/{file_name}"
+        file_url = f"https://s3.amazonaws.com/{bucket_name}/{file_name}"
 
 
         response.stream_to_file(file_name)
 
         try:
-            s3.upload_file(file_name, bucket_name, file_name, ExtraArgs={'ACL': 'public-read'})
+            s3.upload_file(file_name, bucket_name, file_name, ExtraArgs={'ACL': 'public-read', 'GrantRead': 'uri="http://acs.amazonaws.com/groups/global/AllUsers"'})
             print(f'{file_url} uploaded to S3')
         except NoCredentialsError:
             print("Credentials not available")
@@ -216,4 +215,4 @@ def api_send_report(request):
             
 
 
-    return Response(status=status.HTTP_201_CREATED)
+    return Response(status=status.HTTP_200_OK)
