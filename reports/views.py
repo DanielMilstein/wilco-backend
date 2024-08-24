@@ -11,6 +11,8 @@ import boto3
 from botocore.exceptions import NoCredentialsError
 from twilio.rest import Client
 import os
+import time
+
 
 # Initialize the S3 client
 s3 = boto3.client('s3')
@@ -204,6 +206,8 @@ def api_send_report(request):
             print(f'{file_url} uploaded to S3')
         except NoCredentialsError:
             print("Credentials not available")
+
+        time.delay(5)  # Delay for 5 seconds to allow the file to be uploaded to S3 
 
         for phone_number in request.data['phone_numbers']:
             print(f'Sending report to {phone_number}')

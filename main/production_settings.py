@@ -147,3 +147,5 @@ SMS_BROADCAST_TO_NUMBERS = [
  ]
 
 SMS_BACKEND = 'sms.backends.twilio.SmsBackend'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
