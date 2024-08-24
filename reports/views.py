@@ -11,6 +11,7 @@ import boto3
 from botocore.exceptions import NoCredentialsError
 from twilio.rest import Client
 import os
+import s3
 
 # Initialize the S3 client
 s3 = boto3.client('s3')
@@ -191,12 +192,15 @@ def api_send_report(request):
         )
         file_name = f'{request.data["title"]}.mp3'
         bucket_name = 'tts.clips'
-        # region_name = 'us-east-1'
+
 
         response = s3.generate_presigned_url('get_object',
                                         Params={'Bucket': bucket_name,
                                                 'Key': object_name},
                                         ExpiresIn=expiration)
+
+
+        response.stream_to_file(file_name)
 
         try:
             s3.upload_file(file_name, bucket_name, file_name)

@@ -15,3 +15,4 @@ openai
 twilio 
 django-environ
 boto3
+s3
