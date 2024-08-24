@@ -207,7 +207,7 @@ def api_send_report(request):
         except NoCredentialsError:
             print("Credentials not available")
 
-        time.delay(5)  # Delay for 5 seconds to allow the file to be uploaded to S3 
+        time.sleep(5)  # Delay for 5 seconds to allow the file to be uploaded to S3 
 
         for phone_number in request.data['phone_numbers']:
             print(f'Sending report to {phone_number}')
