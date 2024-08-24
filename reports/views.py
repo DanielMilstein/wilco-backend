@@ -184,12 +184,15 @@ def api_create_report_objective(request):
 @api_view(['POST'])
 def api_send_report(request):
     if request.method == 'POST':
+        disclaimer = 'The TTS voice you are hearing is AI-generated and not a human voice.'
+
         response = client.audio.speech.create(
             model = 'tts-1-hd',
             voice = 'onyx',
-            input = request.data['summary']
+            input = disclaimer + request.data['summary']
         )
-        file_name = f'{request.data["title"]}.mp3'
+
+        file_name = f'{request.data["title"]}.wav'
         bucket_name = 'tts.clips'
         region_name = 'us-east-1'
         file_url = f"https://{bucket_name}.s3.{region_name}.amazonaws.com/{file_name}"
