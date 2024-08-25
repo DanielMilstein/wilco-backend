@@ -169,27 +169,17 @@ def separar_string(texto):
     return partes
 
 def encontrar_clave_coordenadas(mensaje_ordenado):
-    claves_coordenadas = []
-    if len(mensaje_ordenado)>1:
-        clave_coordenadas = mensaje_ordenado[1]
-        claves = separar_string(clave_coordenadas)
-        for i in range(3):
-            try:
-                claves_coordenadas.append(claves[i])
-            except:
-                pass
-
-    return claves_coordenadas
+    texto = mensaje_ordenado[1].replace('.', '')
+    texto = texto.replace(',', ' ')
+    palabras = texto.split()
+    palabras_filtradas = [palabra for palabra in palabras if len(palabra) > 3]
+    tres_elementos = palabras_filtradas[:3]
+    resultado = '.'.join(tres_elementos)
+    
+    return resultado
 
 def traducir_coordenadas(clave_coordenadas):
-    direccion = ""
-    for lugar in clave_coordenadas:
-        direccion = direccion +"." + lugar
-    
-    direccion = direccion.strip('.')
-    direccion= re.sub(r'\.+', '.', direccion)
-    direccion_traducida = get_address(direccion)
-    print(f"direccion {direccion}")
+    direccion_traducida = get_address(clave_coordenadas)
     print(f"direccion {direccion_traducida}")
     return direccion_traducida
 
@@ -241,7 +231,8 @@ def manejar_alerta(claves, direccion, mensaje_alerta):
             send_report(title = title, summary = summary, phone_numbers = phone_numbers)
 
     except Exception as e:
-        print(f"Error al manejar la alerta: {e}")
+        pass
+        #print(f"Error al manejar la alerta: {e}")
 
 
 
@@ -276,13 +267,15 @@ def manejar_mensaje_completo(message):
     #print(f"COORDENADAS: {clave_coordenadas}")
     
     direccion = traducir_coordenadas(clave_coordenadas)
+    print(f"DIRECCION {direccion}")
+    if direccion == 0 or direccion == None:
+        direccion = mensaje_ordenado[1]
+        clave_coordenadas = mensaje_ordenado[1]
+
     #ENVIAR A PEPE
-    
-    generar_alerta(claves, clave_coordenadas)
+    mensaje_alerta = generar_alerta(claves, clave_coordenadas)
 
-    # Llamar a send report con el mensaje generado
-
-
+    return claves,direccion,mensaje_alerta
 
 
 
@@ -307,7 +300,7 @@ def get_address(direccion_traducida):
             lon = response_data['coordinates']['lng']
             return (f"latitude {lat} longitude {lon}")
     except:
-        return (f"No se encontraron las coordenadas")
+        return (0)
       
 
     
