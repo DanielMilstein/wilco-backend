@@ -169,10 +169,9 @@ def separar_string(texto):
     return partes
 
 def encontrar_clave_coordenadas(mensaje_ordenado):
-    texto = re.sub(r'\s*,\s*', ',', mensaje_ordenado[1].strip())
-    texto = re.sub(r'\s+', ',', texto)
-    texto = texto.replace(',', '.')
-    
+    texto = mensaje_ordenado[1].replace('.', '')
+    texto = re.sub(r'\s*,\s*', ',', texto)
+    texto = re.sub(r'\s+', '.', texto)
     return texto
 
 
