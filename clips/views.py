@@ -19,22 +19,25 @@ model = ChatOpenAI(model="gpt-4o-mini")
 
 # Primer modelo
 history = [
-    AIMessage(content="Entendido, estoy listo para clasificar los mensajes."),
+    AIMessage(content="Entendido, estoy listo para generar mensajes de alerta."),
 ]
 
+# Instrucciones y plantilla de chat
 messages = [
     SystemMessage(content=(
-        "Tu tarea es clasificar el mensaje basado en la presencia de ciertas claves. "
-        "Clasifica el mensaje de la siguiente manera: "
-        "Devuelve '0' si el mensaje contiene tanto una clave de inicio (R20, R22, A7) como la clave de fin (E1). "
-        "Devuelve '1' si el mensaje contiene solo una clave de inicio (R20, R22, A7) pero no contiene la clave de fin (E1). "
-        "Devuelve '2' si el mensaje contiene solo la clave de fin (E1) pero no contiene ninguna clave de inicio (R20, R22, A7). "
-        "Devuelve '3' si el mensaje no contiene ninguna de las claves mencionadas."
+        "Eres una central de asistencia de emergencia. Recibes una lista de dos elementos. "
+        "El primer elemento es un código de activación que indica el tipo de emergencia, "
+        "y el segundo elemento es el lugar donde ocurrió. Tu tarea es traducir el código de activación "
+        "y generar un mensaje de alerta que indique a las unidades que se dirijan al lugar indicado."
+        "\n\n"
+        "Si el código de activación es:\n"
+        "- 'A7': Genera el mensaje 'Alerta: Explosión de químicos en {lugar}. Diríjanse de inmediato.'\n"
+        "- 'R20': Genera el mensaje 'Alerta: Choque en {lugar}. Diríjanse de inmediato.'\n"
+        "- 'R22': Genera el mensaje 'Alerta: Incendio Forestal con información en {lugar}. Diríjanse de inmediato.'"
     )),
     MessagesPlaceholder(variable_name="history"),
     HumanMessagePromptTemplate.from_template("{user_message}"),
 ]
-
 chain = ChatPromptTemplate.from_messages(messages) | model | StrOutputParser()
 
 
@@ -68,6 +71,11 @@ def api_create_clip(request):
                     claves,partes_separadas= procesar_mensaje(message)
                     print(f"Claves y texto: {claves}")
                     mensaje_ordenado = ordenar_mensaje(partes_separadas)
+                    clave_coordenadas = encontrar_clave_coordenadas(mensaje_ordenado)
+                    print(f"COORDENADAS: {clave_coordenadas}")
+                    direccion = traducir_coordenadas(clave_coordenadas)
+                    generar_alerta(claves,direccion)
+
 
                     message = ""
                     long_message = False
@@ -77,8 +85,15 @@ def api_create_clip(request):
                 print(f"Mensaje enviado al LLM {transcription}")
                 response = classify_message(transcription)
                 if response == "0":
-                    print(f"LLamar {transcription}")
-                    print(f"Mensaje ordenado: ")
+                    message = transcription
+                    print(f"LLamar {message}")
+                    claves,partes_separadas= procesar_mensaje(message)
+                    print(f"Claves y texto: {claves}")
+                    mensaje_ordenado = ordenar_mensaje(partes_separadas)
+                    clave_coordenadas = encontrar_clave_coordenadas(mensaje_ordenado)
+                    print(f"COORDENADAS: {clave_coordenadas}")
+                    
+
                     message = ""
                     long_message = False
                 elif response == "1":
@@ -90,23 +105,23 @@ def api_create_clip(request):
                     message += transcription
                     long_message = True
             
-            #print(f"long_message: {long_message}")
-            #print(f"message: {message}")
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 def obtener_claves(mensaje):
-    # Expresión regular flexible para las claves
-    pattern = r"\b(R\s*,?\s*2\s*0|R\s*,?\s*2\s*2|A\s*,?\s*7|E\s*,?\s*1)\b"
+    # Expresión regular ajustada para manejar casos como R20, R 20, y R,20
+    print(f"mensaje {mensaje}")
+    pattern = r"\b(R\s*,?\s*20|R\s*,?\s*22|A\s*,?\s*7|E\s*,?\s*1)\b"
     
     # Buscar todas las coincidencias en el string
     matches = re.findall(pattern, mensaje)
     
     # Limpiar las claves encontradas (eliminar espacios y comas)
-    claves = [re.sub(r"\s+", "", match) for match in matches]
+    claves = [re.sub(r"[\s,]", "", match) for match in matches]
     
+    print(f"Claves: {claves}")
     return claves
 
 def separar_claves_y_texto(mensaje, claves):
@@ -138,44 +153,87 @@ def separar_claves_y_texto(mensaje, claves):
 
     return partes_separadas
 
-# Función principal que combina ambas tareas
+
 def procesar_mensaje(mensaje):
-    # Paso 1: Obtener las claves
     claves = obtener_claves(mensaje)
-    print(f"Claves encontradas: {claves}")
-    
-    # Paso 2: Separar el mensaje en partes (claves y texto intermedio)
+    #print(f"Claves encontradas: {claves}")
     partes_separadas = separar_claves_y_texto(mensaje, claves)
     
     return claves,partes_separadas
 
 def ordenar_mensaje(partes_separadas):
-    print(f"Entrando partes separadas {partes_separadas}")
+    #print(f"Entrando partes separadas {partes_separadas}")
     mensaje_ordenado = []
     for parte in partes_separadas:
-        if parte in ["R20","R,20"]:
+        if parte in ["R20","R22","A7"]:
             mensaje_ordenado.insert(0,parte)
         elif len(mensaje_ordenado)>0 and parte not in ["E,1","E1"]:
             mensaje_ordenado.append(parte)
+        elif parte in ["E,1","E1"]:
+            break
     mensaje_ordenado.append("E1")
     print(f"Mensaje ordenado: {mensaje_ordenado} ")
 
     return mensaje_ordenado
 
+def separar_string(texto):
+    partes = re.split(r'[,\s]+', texto)
+    partes = [parte for parte in partes if parte]
+    return partes
 
-        
-    
+def encontrar_clave_coordenadas(mensaje_ordenado):
+    claves_coordenadas = []
+    if len(mensaje_ordenado)>1:
+        clave_coordenadas = mensaje_ordenado[1]
+        claves = separar_string(clave_coordenadas)
+        for i in range(3):
+            try:
+                claves_coordenadas.append(claves[i])
+            except:
+                pass
 
+    return claves_coordenadas
 
-@traceable
-def classify_message(message):
+def traducir_coordenadas(clave_coordenadas):
+    direccion = ""
+    for lugar in clave_coordenadas:
+        direccion += lugar
+    return direccion
+
+def generar_alerta(clave_coordenadas,direccion):
     try:
-        print(f"El mensaje es: '{message}'")
-        response = chain.invoke({"history": history, "user_message": message})
+        codigo_activacion = clave_coordenadas[0]
+        user_message = f"El código de activación es {codigo_activacion} y el lugar es {direccion}."
+        response = chain.invoke({"history": history, "user_message": user_message})
+        print(f"Mensaje de alerta: {response}")
         return response
     except Exception as e:
         print(f"Error al invocar el modelo: {e}")
         return "Hubo un error al procesar tu solicitud. Por favor, intenta de nuevo."
+
+def asignar_operacion(mensaje_ordenado):
+    if mensaje_ordenado[0] == "R20":
+        print("LLAMAR BOMBEROS")
+    
+
+def classify_message(message):
+    # Define the regular expression patterns for start and end keys
+    start_keys_pattern = r"\b(R\s*,?\s*20|R\s*,?\s*22|A\s*,?\s*7)\b"
+    end_key_pattern = r"\b(E\s*,?\s*1)\b"
+    
+    # Find start and end keys in the message
+    start_keys = re.findall(start_keys_pattern, message)
+    end_keys = re.findall(end_key_pattern, message)
+    
+    # Classify the message based on the presence of start and end keys
+    if start_keys and end_keys:
+        return "0"  # Both start and end keys are present
+    elif start_keys and not end_keys:
+        return "1"  # Only start keys are present
+    elif not start_keys and end_keys:
+        return "2"  # Only end key is present
+    else:
+        return "3"  # Neither start nor end keys are present
 
 
 @api_view(['GET'])
