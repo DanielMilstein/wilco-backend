@@ -231,8 +231,8 @@ def send_report(title, summary, phone_numbers):
     disclaimer = 'Español. Esta voz no es humana, es generada por IA.'
 
     response = client.audio.speech.create(
-        model = 'tts-1-hd',
-        voice = 'echo',
+        model = 'tts-1',
+        voice = 'onyx',
         input = disclaimer + summary
     )
 
