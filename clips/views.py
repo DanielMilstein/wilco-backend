@@ -75,7 +75,8 @@ def api_create_clip(request):
                 #print(f"Mensaje enviado al LLM {message}")
                 response = classify_message(message)
                 if response == "0":
-                    manejar_mensaje_completo(message)
+                    claves,direccion,mensaje_alerta = manejar_mensaje_completo(message)
+                    manejar_alerta(claves,direccion,mensaje_alerta)
                     message = ""
                     long_message = False
                 elif response == "2":
