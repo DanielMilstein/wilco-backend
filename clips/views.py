@@ -267,6 +267,11 @@ def manejar_mensaje_completo(message):
     #print(f"COORDENADAS: {clave_coordenadas}")
     
     direccion = traducir_coordenadas(clave_coordenadas)
+    print(f"DIRECCION {direccion}")
+    if direccion == 0 or direccion == None:
+        direccion = mensaje_ordenado[1]
+        clave_coordenadas = mensaje_ordenado[1]
+
     #ENVIAR A PEPE
     mensaje_alerta = generar_alerta(claves, clave_coordenadas)
 
@@ -295,7 +300,7 @@ def get_address(direccion_traducida):
             lon = response_data['coordinates']['lng']
             return (f"latitude {lat} longitude {lon}")
     except:
-        return (f"No se encontraron las coordenadas")
+        return (0)
       
 
     
