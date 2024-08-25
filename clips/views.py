@@ -231,6 +231,9 @@ def manejar_alerta(claves, direccion, mensaje_alerta):
             phone_numbers = [all_phone_numbers['bomberos'], all_phone_numbers['ambulancia']]
             send_report(title = title, summary = summary, phone_numbers = phone_numbers)
 
+        else:
+            print(f"Error en el código de activación, clave de inicio: {clave_inicio}")
+
     except Exception as e:
         print(f"Error al manejar la alerta: {e}")
 
