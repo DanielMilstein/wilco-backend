@@ -220,3 +220,41 @@ def api_send_report(request):
 
 
         return Response(status=status.HTTP_200_OK)
+
+
+
+
+
+def send_report(title, summary, phone_numbers):
+    if request.method == 'POST':
+        # disclaimer = 'The TTS voice you are hearing is AI-generated and not a human voice.'
+        disclaimer = 'La voz TTS que está escuchando es generada por IA y no es una voz humana.'
+
+        response = client.audio.speech.create(
+            model = 'tts-1-hd',
+            voice = 'onyx',
+            input = disclaimer + summary
+        )
+
+        file_name = f'{title}.mp3'
+        bucket_name = 'tts.clips'
+        file_url = f"https://s3.amazonaws.com/{bucket_name}/{file_name}"
+
+
+        response.stream_to_file(file_name)
+
+        try:
+            s3.upload_file(file_name, bucket_name, file_name, ExtraArgs={'GrantRead': 'uri="http://acs.amazonaws.com/groups/global/AllUsers"', 'ContentType': 'audio/mp3'})
+            print(f'{file_url} uploaded to S3')
+        except NoCredentialsError:
+            print("Credentials not available")
+
+
+        for phone_number in phone_numbers:
+            print(f'Sending report to {phone_number}')
+            call = twilio_client.calls.create(
+                twiml=f'<Response><Play loop="2">{file_url}</Play></Response>',
+                to=phone_number,
+                from_=os.environ["MY_TWILIO_NUMBER"]
+            )
+            
