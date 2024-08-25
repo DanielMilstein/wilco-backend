@@ -34,7 +34,9 @@ messages = [
 
 # Crear la cadena de prompts
 chain = ChatPromptTemplate.from_messages(messages) | model | StrOutputParser()
-
+# Variables globales
+message = ""
+long_message = False
 
 
 # Create your views here.
@@ -52,6 +54,7 @@ def view_clip(request, id):
 
 @api_view(['POST'])
 def api_create_clip(request):
+    global message, long_message
     if request.method == 'POST':
         serializer = ClipSerializer(data=request.data)
         if serializer.is_valid():
@@ -59,11 +62,38 @@ def api_create_clip(request):
             transcription = serializer.validated_data.get('transcription')
             #Cuando llega un clip mandar al LLM para ver si encuentra uno de los códigos 
             # de inicio y o término
-            response = classify_message(transcription)
-            if response == "0":
-                print("LLamar")
-            #Si el código empieza y finaliza, procesar todo de una
+            if long_message == True:
+                message = message+" "+transcription
+                print(f"Mensaje enviado al LLM {message}")
+                response = classify_message(message)
+                if response == "0":
+                    print(f"LLamar {message}")
+                    message = ""
+                    long_message = False
 
+            elif long_message == False:
+                print(f"Mensaje enviado al LLM {transcription}")
+                response = classify_message(transcription)
+                if response == "0":
+                    print(f"LLamar {transcription}")
+                    message = ""
+                    long_message = False
+                elif response == "1":
+                    message += transcription
+                    long_message = True
+                elif response == "3":
+                    message += transcription
+                    long_message = True
+            
+            print(f"long_message: {long_message}")
+            print(f"message: {message}")
+        
+            
+            
+
+
+            
+            #Si el código empieza y finaliza, procesar todo de una
 
             #Si el código solo empieza y aún no finaliza ir almacenando los siguientes clips en una 
             # variable global y procesarlo después
@@ -86,12 +116,12 @@ def classify_message(message):
     try:
         print(f"El mensaje es: '{message}'")
         response = chain.invoke({"history": history, "user_message": message})
-        print(f"La respuesta es: {response}")
+        #print(f"La respuesta es: {response}")
 
         return response
     except Exception as e:
         # Capturar cualquier error durante la invocación del modelo
-        print(f"Error al invocar el modelo: {e}")
+        #print(f"Error al invocar el modelo: {e}")
         return "Hubo un error al procesar tu solicitud. Por favor, intenta de nuevo."
 
 
@@ -99,8 +129,8 @@ def classify_message(message):
 def api_list_clips(request):
     clips = Clip.objects.all()
     serializer = ClipSerializer(clips, many=True)
-    for clip in serializer:
-        print(f"Transcription for '{clip.title}': {clip.transcription}")
+    #for clip in serializer:
+        #print(f"Transcription for '{clip.title}': {clip.transcription}")
     return Response(serializer.data)
 
 @api_view(['GET'])
