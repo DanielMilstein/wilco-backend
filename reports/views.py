@@ -228,7 +228,7 @@ def api_send_report(request):
 def send_report(title, summary, phone_numbers):
     # disclaimer = 'The TTS voice you are hearing is AI-generated and not a human voice.'
     # disclaimer = 'La voz TTS que está escuchando es generada por IA y no es una voz humana.'
-    disclaimer = 'Esta voz no es humana, es generada por IA.'
+    disclaimer = 'Español. Esta voz no es humana, es generada por IA.'
 
     response = client.audio.speech.create(
         model = 'tts-1-hd',
