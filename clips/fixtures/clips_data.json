@@ -1,0 +1,242 @@
+[
+  {
+      "model": "clips.Clip",
+      "pk": 1,
+      "fields": {
+          "user_id": 1,
+          "time_start": "2024-08-01T09:00:00Z",
+          "time_end": "2024-08-01T09:05:00Z",
+          "duration": 300,
+          "date": "2024-08-01",
+          "transcription": "This is the first transcription.",
+          "speaker": "Speaker A",
+          "score": 0.95,
+          "keywords": "first, transcription, speaker A",
+          "summary": "Summary of the first transcription."
+      }
+  },
+  {
+      "model": "clips.Clip",
+      "pk": 2,
+      "fields": {
+          "user_id": 1,
+          "time_start": "2024-08-01T10:00:00Z",
+          "time_end": "2024-08-01T10:07:00Z",
+          "duration": 420,
+          "date": "2024-08-01",
+          "transcription": "This is the second transcription.",
+          "speaker": "Speaker B",
+          "score": 0.87,
+          "keywords": "second, transcription, speaker B",
+          "summary": "Summary of the second transcription."
+      }
+  },
+  {
+      "model": "clips.Clip",
+      "pk": 3,
+      "fields": {
+          "user_id": 1,
+          "time_start": "2024-08-01T11:00:00Z",
+          "time_end": "2024-08-01T11:03:00Z",
+          "duration": 180,
+          "date": "2024-08-01",
+          "transcription": "This is the third transcription.",
+          "speaker": "Speaker A",
+          "score": 0.92,
+          "keywords": "third, transcription, speaker A",
+          "summary": "Summary of the third transcription."
+      }
+  },
+  {
+      "model": "clips.Clip",
+      "pk": 4,
+      "fields": {
+          "user_id": 1,
+          "time_start": "2024-08-02T09:30:00Z",
+          "time_end": "2024-08-02T09:35:00Z",
+          "duration": 300,
+          "date": "2024-08-02",
+          "transcription": "This is the fourth transcription.",
+          "speaker": "Speaker C",
+          "score": 0.89,
+          "keywords": "fourth, transcription, speaker C",
+          "summary": "Summary of the fourth transcription."
+      }
+  },
+  {
+      "model": "clips.Clip",
+      "pk": 5,
+      "fields": {
+          "user_id": 1,
+          "time_start": "2024-08-02T10:45:00Z",
+          "time_end": "2024-08-02T10:50:00Z",
+          "duration": 300,
+          "date": "2024-08-02",
+          "transcription": "This is the fifth transcription.",
+          "speaker": "Speaker B",
+          "score": 0.93,
+          "keywords": "fifth, transcription, speaker B",
+          "summary": "Summary of the fifth transcription."
+      }
+  },
+  {
+      "model": "clips.Clip",
+      "pk": 6,
+      "fields": {
+          "user_id": 1,
+          "time_start": "2024-08-02T11:15:00Z",
+          "time_end": "2024-08-02T11:20:00Z",
+          "duration": 300,
+          "date": "2024-08-02",
+          "transcription": "This is the sixth transcription.",
+          "speaker": "Speaker A",
+          "score": 0.90,
+          "keywords": "sixth, transcription, speaker A",
+          "summary": "Summary of the sixth transcription."
+      }
+  },
+  {
+      "model": "clips.Clip",
+      "pk": 7,
+      "fields": {
+          "user_id": 1,
+          "time_start": "2024-08-02T12:00:00Z",
+          "time_end": "2024-08-02T12:05:00Z",
+          "duration": 300,
+          "date": "2024-08-02",
+          "transcription": "This is the seventh transcription.",
+          "speaker": "Speaker C",
+          "score": 0.85,
+          "keywords": "seventh, transcription, speaker C",
+          "summary": "Summary of the seventh transcription."
+      }
+  },
+  {
+      "model": "clips.Clip",
+      "pk": 8,
+      "fields": {
+          "user_id": 1,
+          "time_start": "2024-08-03T09:15:00Z",
+          "time_end": "2024-08-03T09:20:00Z",
+          "duration": 300,
+          "date": "2024-08-03",
+          "transcription": "This is the eighth transcription.",
+          "speaker": "Speaker B",
+          "score": 0.91,
+          "keywords": "eighth, transcription, speaker B",
+          "summary": "Summary of the eighth transcription."
+      }
+  },
+  {
+      "model": "clips.Clip",
+      "pk": 9,
+      "fields": {
+          "user_id": 1,
+          "time_start": "2024-08-03T10:30:00Z",
+          "time_end": "2024-08-03T10:35:00Z",
+          "duration": 300,
+          "date": "2024-08-03",
+          "transcription": "This is the ninth transcription.",
+          "speaker": "Speaker A",
+          "score": 0.88,
+          "keywords": "ninth, transcription, speaker A",
+          "summary": "Summary of the ninth transcription."
+      }
+  },
+  {
+      "model": "clips.Clip",
+      "pk": 10,
+      "fields": {
+          "user_id": 1,
+          "time_start": "2024-08-03T11:00:00Z",
+          "time_end": "2024-08-03T11:07:00Z",
+          "duration": 420,
+          "date": "2024-08-03",
+          "transcription": "This is the tenth transcription.",
+          "speaker": "Speaker C",
+          "score": 0.86,
+          "keywords": "tenth, transcription, speaker C",
+          "summary": "Summary of the tenth transcription."
+      }
+  },
+  {
+      "model": "clips.Clip",
+      "pk": 11,
+      "fields": {
+          "user_id": 1,
+          "time_start": "2024-08-03T12:15:00Z",
+          "time_end": "2024-08-03T12:20:00Z",
+          "duration": 300,
+          "date": "2024-08-03",
+          "transcription": "This is the eleventh transcription.",
+          "speaker": "Speaker B",
+          "score": 0.90,
+          "keywords": "eleventh, transcription, speaker B",
+          "summary": "Summary of the eleventh transcription."
+      }
+  },
+  {
+      "model": "clips.Clip",
+      "pk": 12,
+      "fields": {
+          "user_id": 1,
+          "time_start": "2024-08-03T13:30:00Z",
+          "time_end": "2024-08-03T13:35:00Z",
+          "duration": 300,
+          "date": "2024-08-03",
+          "transcription": "This is the twelfth transcription.",
+          "speaker": "Speaker A",
+          "score": 0.92,
+          "keywords": "twelfth, transcription, speaker A",
+          "summary": "Summary of the twelfth transcription."
+      }
+  },
+  {
+      "model": "clips.Clip",
+      "pk": 13,
+      "fields": {
+          "user_id": 1,
+          "time_start": "2024-08-03T14:00:00Z",
+          "time_end": "2024-08-03T14:05:00Z",
+          "duration": 300,
+          "date": "2024-08-03",
+          "transcription": "This is the thirteenth transcription.",
+          "speaker": "Speaker C",
+          "score": 0.89,
+          "keywords": "thirteenth, transcription, speaker C",
+          "summary": "Summary of the thirteenth transcription."
+      }
+  },
+  {
+      "model": "clips.Clip",
+      "pk": 14,
+      "fields": {
+          "user_id": 1,
+          "time_start": "2024-08-03T15:15:00Z",
+          "time_end": "2024-08-03T15:20:00Z",
+          "duration": 300,
+          "date": "2024-08-03",
+          "transcription": "This is the fourteenth transcription.",
+          "speaker": "Speaker B",
+          "score": 0.87,
+          "keywords": "fourteenth, transcription, speaker B",
+          "summary": "Summary of the fourteenth transcription."
+      }
+  },
+  {
+      "model": "clips.Clip",
+      "pk": 15,
+      "fields": {
+          "user_id": 1,
+          "time_start": "2024-08-03T16:30:00Z",
+          "time_end": "2024-08-03T16:35:00Z",
+          "duration": 300,
+          "date": "2024-08-03",
+          "transcription": "This is the fifteenth transcription.",
+          "speaker": "Speaker A",
+          "score": 0.90,
+          "keywords": "fifteenth, transcription, speaker A",
+          "summary": "Summary of the fifteenth transcription."
+      }
+  }
+]
