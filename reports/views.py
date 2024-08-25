@@ -20,6 +20,7 @@ client = OpenAI()
 account_sid=os.environ["MY_ACCOUNT_SID"]
 auth_token = os.environ["TWILIO_AUTH_TOKEN"]
 twilio_client = Client(account_sid, auth_token)
+polly_client = boto3.client('polly')
 
 
 def create_report(request):
@@ -230,18 +231,38 @@ def send_report(title, summary, phone_numbers):
     # disclaimer = 'La voz TTS que está escuchando es generada por IA y no es una voz humana.'
     disclaimer = 'Español. Esta voz no es humana, es generada por IA.'
 
-    response = client.audio.speech.create(
-        model = 'tts-1',
-        voice = 'onyx',
-        input = disclaimer + summary
+    # response = client.audio.speech.create(
+    #     model = 'tts-1-hd',
+    #     voice = 'onyx',
+    #     input = disclaimer + summary
+    # )
+
+    response = polly_client.synthesize_speech(
+        Text=disclaimer + summary,
+        OutputFormat='mp3',
+        VoiceId='Lupe',
+        Engine='neural'
     )
+
+
+
+
+
+
 
     file_name = f'{title}.mp3'
     bucket_name = 'tts.clips'
     file_url = f"https://s3.amazonaws.com/{bucket_name}/{file_name}"
 
 
-    response.stream_to_file(file_name)
+    # response.stream_to_file(file_name)
+
+    with open(file_name, 'wb') as file:
+        file.write(response['AudioStream'].read())
+        
+
+
+
 
     try:
         s3.upload_file(file_name, bucket_name, file_name, ExtraArgs={'GrantRead': 'uri="http://acs.amazonaws.com/groups/global/AllUsers"', 'ContentType': 'audio/mp3'})
