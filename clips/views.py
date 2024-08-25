@@ -12,6 +12,8 @@ from langchain_core.prompts import MessagesPlaceholder, HumanMessagePromptTempla
 from langchain_core.output_parsers import StrOutputParser
 from langsmith import traceable
 import re
+import what3words
+import requests
 
 load_dotenv()
 openai_api_key = os.getenv('OPENAI_API_KEY')
@@ -40,6 +42,10 @@ messages = [
 ]
 chain = ChatPromptTemplate.from_messages(messages) | model | StrOutputParser()
 
+API_KEY = '31PTULZ0'
+W3W_API_URL = 'https://api.what3words.com/v3/'
+geocoder = what3words.Geocoder(API_KEY)
+
 
 # Variables globales
 message = ""
@@ -64,19 +70,10 @@ def api_create_clip(request):
             transcription = serializer.validated_data.get('transcription')
             if long_message == True:
                 message = message + " " + transcription
-                print(f"Mensaje enviado al LLM {message}")
+                #print(f"Mensaje enviado al LLM {message}")
                 response = classify_message(message)
                 if response == "0":
-                    print(f"LLamar {message}")
-                    claves,partes_separadas= procesar_mensaje(message)
-                    print(f"Claves y texto: {claves}")
-                    mensaje_ordenado = ordenar_mensaje(partes_separadas)
-                    clave_coordenadas = encontrar_clave_coordenadas(mensaje_ordenado)
-                    print(f"COORDENADAS: {clave_coordenadas}")
-                    direccion = traducir_coordenadas(clave_coordenadas)
-                    generar_alerta(claves,direccion)
-
-
+                    manejar_mensaje_completo(message)
                     message = ""
                     long_message = False
                 elif response == "2":
@@ -86,14 +83,7 @@ def api_create_clip(request):
                 response = classify_message(transcription)
                 if response == "0":
                     message = transcription
-                    print(f"LLamar {message}")
-                    claves,partes_separadas= procesar_mensaje(message)
-                    print(f"Claves y texto: {claves}")
-                    mensaje_ordenado = ordenar_mensaje(partes_separadas)
-                    clave_coordenadas = encontrar_clave_coordenadas(mensaje_ordenado)
-                    print(f"COORDENADAS: {clave_coordenadas}")
-                    
-
+                    manejar_mensaje_completo(message)
                     message = ""
                     long_message = False
                 elif response == "1":
@@ -112,7 +102,7 @@ def api_create_clip(request):
 
 def obtener_claves(mensaje):
     # Expresión regular ajustada para manejar casos como R20, R 20, y R,20
-    print(f"mensaje {mensaje}")
+    #print(f"mensaje {mensaje}")
     pattern = r"\b(R\s*,?\s*20|R\s*,?\s*22|A\s*,?\s*7|E\s*,?\s*1)\b"
     
     # Buscar todas las coincidencias en el string
@@ -121,7 +111,7 @@ def obtener_claves(mensaje):
     # Limpiar las claves encontradas (eliminar espacios y comas)
     claves = [re.sub(r"[\s,]", "", match) for match in matches]
     
-    print(f"Claves: {claves}")
+    #print(f"Claves: {claves}")
     return claves
 
 def separar_claves_y_texto(mensaje, claves):
@@ -153,7 +143,6 @@ def separar_claves_y_texto(mensaje, claves):
 
     return partes_separadas
 
-
 def procesar_mensaje(mensaje):
     claves = obtener_claves(mensaje)
     #print(f"Claves encontradas: {claves}")
@@ -172,7 +161,7 @@ def ordenar_mensaje(partes_separadas):
         elif parte in ["E,1","E1"]:
             break
     mensaje_ordenado.append("E1")
-    print(f"Mensaje ordenado: {mensaje_ordenado} ")
+    #print(f"Mensaje ordenado: {mensaje_ordenado} ")
 
     return mensaje_ordenado
 
@@ -197,8 +186,14 @@ def encontrar_clave_coordenadas(mensaje_ordenado):
 def traducir_coordenadas(clave_coordenadas):
     direccion = ""
     for lugar in clave_coordenadas:
-        direccion += lugar
-    return direccion
+        direccion = direccion +"." + lugar
+    
+    direccion = direccion.strip('.')
+    direccion= re.sub(r'\.+', '.', direccion)
+    direccion_traducida = get_address(direccion)
+    print(f"direccion {direccion}")
+    print(f"direccion {direccion_traducida}")
+    return direccion_traducida
 
 def generar_alerta(clave_coordenadas,direccion):
     try:
@@ -211,10 +206,6 @@ def generar_alerta(clave_coordenadas,direccion):
         print(f"Error al invocar el modelo: {e}")
         return "Hubo un error al procesar tu solicitud. Por favor, intenta de nuevo."
 
-def asignar_operacion(mensaje_ordenado):
-    if mensaje_ordenado[0] == "R20":
-        print("LLAMAR BOMBEROS")
-    
 
 def classify_message(message):
     # Define the regular expression patterns for start and end keys
@@ -235,6 +226,44 @@ def classify_message(message):
     else:
         return "3"  # Neither start nor end keys are present
 
+def manejar_mensaje_completo(message):
+    #print(f"LLamar {message}")
+    claves, partes_separadas = procesar_mensaje(message)
+    #print(f"Claves y texto: {claves}")
+    
+    mensaje_ordenado = ordenar_mensaje(partes_separadas)
+    clave_coordenadas = encontrar_clave_coordenadas(mensaje_ordenado)
+    
+    #print(f"COORDENADAS: {clave_coordenadas}")
+    
+    direccion = traducir_coordenadas(clave_coordenadas)
+    
+    generar_alerta(claves, direccion)
+
+
+
+def get_address(direccion_traducida):
+    api_key = API_KEY
+    words = direccion_traducida
+    try:
+        url = 'https://api.what3words.com/v3/convert-to-coordinates?'
+        params = {
+            'words': words,
+            'key': api_key,
+            'lang': 'es'
+            }
+        response = requests.get(url, params=params)
+        response_data = response.json()
+        print(response_data, "URL")
+        print(api_key)
+
+        if 'coordinates' in response_data:
+            lat = response_data['coordinates']['lat']
+            lon = response_data['coordinates']['lng']
+            return (f"latitude {lat} longitude {lon}")
+    except:
+        return (f"No se encontraron las coordenadas")
+      
 
 @api_view(['GET'])
 def api_list_clips(request):
