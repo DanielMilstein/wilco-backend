@@ -4,7 +4,9 @@
   "description": "Welcome to Django REST Starter! This repository provides a starting point for building RESTful APIs using the Django REST framework",
   "main": "index.js",
   "scripts": {
-    "build-css": "npx tailwindcss -i ./static/css/tailwind.css -o ./static/css/styles.css --watch"
+    "build-css": "npx tailwindcss -i ./static/css/tailwind.css -o ./static/css/styles.css --watch",
+    "start": "concurrently \"npm run build-css\" \"gunicorn --timeout 500 main.wsgi\""
+
   },
   "keywords": [],
   "author": "",
