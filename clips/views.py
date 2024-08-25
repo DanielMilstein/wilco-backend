@@ -34,6 +34,7 @@ messages = [
         "- 'A7': Genera el mensaje 'Alerta: Filtración de gases peligrosos en {lugar}. Diríjanse de inmediato.'\n"
         "- 'R20': Genera el mensaje 'Alerta: Choque en {lugar}. Diríjanse de inmediato.'\n"
         "- 'R22': Genera el mensaje 'Alerta: Incendio Forestal con información en {lugar}. Diríjanse de inmediato.'"
+        "Los codigos de activación son R20, R22 y A7, pero pueden estar escritos de diferentes formas como R 20, R,20, R, 20, R-20, etc."
     )),
     MessagesPlaceholder(variable_name="history"),
     HumanMessagePromptTemplate.from_template("{user_message}"),
