@@ -33,7 +33,7 @@ messages = [
         "y generar un mensaje de alerta que indique a las unidades que se dirijan al lugar indicado."
         "\n\n"
         "Si el código de activación es:\n"
-        "- 'A7': Genera el mensaje 'Alerta: Explosión de químicos en {lugar}. Diríjanse de inmediato.'\n"
+        "- 'A7': Genera el mensaje 'Alerta: Filtración de gases peligrosos en {lugar}. Diríjanse de inmediato.'\n"
         "- 'R20': Genera el mensaje 'Alerta: Choque en {lugar}. Diríjanse de inmediato.'\n"
         "- 'R22': Genera el mensaje 'Alerta: Incendio Forestal con información en {lugar}. Diríjanse de inmediato.'"
     )),
@@ -237,8 +237,9 @@ def manejar_mensaje_completo(message):
     #print(f"COORDENADAS: {clave_coordenadas}")
     
     direccion = traducir_coordenadas(clave_coordenadas)
+    #ENVIAR A PEPE
     
-    generar_alerta(claves, direccion)
+    generar_alerta(claves, clave_coordenadas)
 
 
 
