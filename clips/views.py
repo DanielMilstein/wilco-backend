@@ -170,10 +170,13 @@ def separar_string(texto):
 
 def encontrar_clave_coordenadas(mensaje_ordenado):
     texto = mensaje_ordenado[1].replace('.', '')
-    texto = re.sub(r'\s*,\s*', ',', texto)
-    texto = re.sub(r'\s+', '.', texto)
-    return texto
-
+    texto = texto.replace(',', ' ')
+    palabras = texto.split()
+    palabras_filtradas = [palabra for palabra in palabras if len(palabra) > 3]
+    tres_elementos = palabras_filtradas[:3]
+    resultado = '.'.join(tres_elementos)
+    
+    return resultado
 
 def traducir_coordenadas(clave_coordenadas):
     direccion_traducida = get_address(clave_coordenadas)
