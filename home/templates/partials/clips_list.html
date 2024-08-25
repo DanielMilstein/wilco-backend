@@ -1,0 +1,6 @@
+{% for clip in clips %}
+<div class="grid gap-1 text-sm">
+  <div class="font-medium">{{clip.time_start|date:"h:i A"}}</div>
+  <div>{{ clip.transcription }}</div>
+</div>
+{% endfor %}
