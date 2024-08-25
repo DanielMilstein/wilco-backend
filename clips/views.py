@@ -68,7 +68,7 @@ def api_create_clip(request):
         serializer = ClipSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            transcription = serializer.validated_data.get('transcription')
+            transcription = serializer.validated_data.get('transcription').upper()
             if long_message == True:
                 message = message + " " + transcription
                 #print(f"Mensaje enviado al LLM {message}")
