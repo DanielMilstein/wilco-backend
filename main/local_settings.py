@@ -78,8 +78,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'wilco_db',       # Name of your database
-        'USER': 'myuser',            # Your database username
-        'PASSWORD': 'mypassword',    # Your database password
+        'USER': 'wilco',            # Your database username
+        'PASSWORD': 'wilcopassword',    # Your database password
         'HOST': 'localhost',         # Set to 'localhost' or the IP address of your PostgreSQL server
         'PORT': '5432',              # Default PostgreSQL port
     }

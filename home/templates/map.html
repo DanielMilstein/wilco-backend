@@ -1,0 +1,50 @@
+<!-- home/templates/home/map.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map View</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+        .container {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Map View</h1>
+        <form action="{% url 'get_address' %}" method="get">
+            <label for="words">Enter 3 words:</label>
+            <input type="text" id="words" name="words" required>
+            <button type="submit">Find Location</button>
+        </form>
+    </div>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Check if latitude and longitude are passed
+        var lat = {{ latitude|default:51.505 }};
+        var lon = {{ longitude|default:-0.09 }};
+        var map = L.map('map').setView([lat, lon], 13);
+
+        // Add a tile layer to the map
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Add a marker at the coordinates
+        if (lat && lon) {
+            var marker = L.marker([lat, lon]).addTo(map);
+            marker.bindPopup('<b>Location</b><br>Coordinates: ' + lat + ', ' + lon).openPopup();
+        }
+    </script>
+</body>
+</html>

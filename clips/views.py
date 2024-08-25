@@ -4,9 +4,28 @@ from rest_framework.response import Response
 from .models import Clip
 from .serializers import ClipSerializer
 from django.shortcuts import render
+from openai import OpenAI
+from os import environ
+from datetime import date
+import requests
 
 
 
+
+
+
+
+clip = {
+    'title': 'uno',
+    'id': '1',
+    'description':'desc',
+    'author.username':'Pepe',
+    'date': date.today().strftime('%Y-%m-%d'),
+    'transcription': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip'
+}
+
+
+clips = [clip, clip, clip]
 # Create your views here.
 def list_clips(request):
     clips = Clip.objects.all()

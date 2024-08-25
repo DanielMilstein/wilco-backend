@@ -9,4 +9,5 @@ urlpatterns = [
     path('api/clips/<int:id>/', views.api_view_clip, name='api_view_clip'),
     path('api/clips/<int:id>/', views.api_update_clip, name='api_update_clip'),
     path('api/clips/<int:id>/', views.api_delete_clip, name='api_delete_clip'),
+    
 ]
