@@ -35,6 +35,7 @@ django-rest-starter/
    python -m venv venv
    source venv/bin/activate
    pip install -r requirements.txt
+   npm install
    ```
 
 4. Apply database migrations:
@@ -45,6 +46,7 @@ django-rest-starter/
 5. Run the development server:
    ```shell
    python manage.py runserver
+   npm run build-css <!-- in other terminal -->
    ```
 
 ## Configuration
