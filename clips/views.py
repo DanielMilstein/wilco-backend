@@ -169,27 +169,15 @@ def separar_string(texto):
     return partes
 
 def encontrar_clave_coordenadas(mensaje_ordenado):
-    claves_coordenadas = []
-    if len(mensaje_ordenado)>1:
-        clave_coordenadas = mensaje_ordenado[1]
-        claves = separar_string(clave_coordenadas)
-        for i in range(3):
-            try:
-                claves_coordenadas.append(claves[i])
-            except:
-                pass
+    texto = re.sub(r'\s*,\s*', ',', mensaje_ordenado[1].strip())
+    texto = re.sub(r'\s+', ',', texto)
+    texto = texto.replace(',', '.')
+    
+    return texto
 
-    return claves_coordenadas
 
 def traducir_coordenadas(clave_coordenadas):
-    direccion = ""
-    for lugar in clave_coordenadas:
-        direccion = direccion +"." + lugar
-    
-    direccion = direccion.strip('.')
-    direccion= re.sub(r'\.+', '.', direccion)
-    direccion_traducida = get_address(direccion)
-    print(f"direccion {direccion}")
+    direccion_traducida = get_address(clave_coordenadas)
     print(f"direccion {direccion_traducida}")
     return direccion_traducida
 
@@ -277,12 +265,9 @@ def manejar_mensaje_completo(message):
     
     direccion = traducir_coordenadas(clave_coordenadas)
     #ENVIAR A PEPE
-    
-    generar_alerta(claves, clave_coordenadas)
+    mensaje_alerta = generar_alerta(claves, clave_coordenadas)
 
-    # Llamar a send report con el mensaje generado
-
-
+    return claves,direccion,mensaje_alerta
 
 
 
