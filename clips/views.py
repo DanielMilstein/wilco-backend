@@ -68,12 +68,14 @@ def api_create_clip(request):
         if serializer.is_valid():
             serializer.save()
             transcription = serializer.validated_data.get('transcription')
+
             if long_message == True:
                 message = message + " " + transcription
                 #print(f"Mensaje enviado al LLM {message}")
                 response = classify_message(message)
                 if response == "0":
-                    manejar_mensaje_completo(message)
+                    claves,direccion,mensaje_alerta = manejar_mensaje_completo(message)
+                    manejar_alerta(claves,direccion,mensaje_alerta)
                     message = ""
                     long_message = False
                 elif response == "2":
@@ -83,7 +85,8 @@ def api_create_clip(request):
                 response = classify_message(transcription)
                 if response == "0":
                     message = transcription
-                    manejar_mensaje_completo(message)
+                    claves,direccion,mensaje_alerta = manejar_mensaje_completo(message)
+                    manejar_alerta(claves,direccion,mensaje_alerta)
                     message = ""
                     long_message = False
                 elif response == "1":
@@ -238,10 +241,26 @@ def manejar_mensaje_completo(message):
     
     direccion = traducir_coordenadas(clave_coordenadas)
     #ENVIAR A PEPE
-    
-    generar_alerta(claves, clave_coordenadas)
+    mensaje_alerta = generar_alerta(claves, clave_coordenadas)
+
+    return claves,direccion,mensaje_alerta
 
 
+
+def manejar_alerta(claves,direccion,mensaje_alerta):
+    try:
+        clave_inicio = claves[0]
+        if clave_inicio in ["R20","R,20","r20"]:
+            print("CHOQUE, llamar a bomberos y ambulancia")
+            print(mensaje_alerta)
+        elif clave_inicio in ["R22","R,22","r22"]:
+            print("INCENDIO FORESTAL BIDUBIDU LLAMAR A BOMBEROS y carabineros")
+            print(mensaje_alerta)
+        elif clave_inicio in ["A7","A,7","a7"]:
+            print("QUIMICOS llamar a bomberos y ambulancia")
+            print(mensaje_alerta)
+    except:
+        pass
 
 def get_address(direccion_traducida):
     api_key = API_KEY
