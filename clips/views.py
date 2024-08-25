@@ -204,7 +204,7 @@ def manejar_alerta(claves, direccion, mensaje_alerta):
                     }
     try:
         clave_inicio = claves[0]
-        if clave_inicio in ["R20","R,20","r20"]:
+        if clave_inicio in ["R20","R,20","r20", "R, 20", "R-20", "R 20", "r 20", "r,20", "r-20"]:
             print("CHOQUE, llamar a bomberos y ambulancia")
             print(mensaje_alerta)
             # Llamar a send report con el mensaje generado con json y los números de teléfono
@@ -213,7 +213,7 @@ def manejar_alerta(claves, direccion, mensaje_alerta):
             phone_numbers = [all_phone_numbers['bomberos'], all_phone_numbers['ambulancia']]
             send_report(title = title, summary = summary, phone_numbers = phone_numbers)
 
-        elif clave_inicio in ["R22","R,22","r22"]:
+        elif clave_inicio in ["R22","R,22","r22", "R, 22", "R-22", "R 22", "r 22", "r,22", "r-22"]:
             print("INCENDIO FORESTAL BIDUBIDU LLAMAR A BOMBEROS y carabineros")
             print(mensaje_alerta)
             # Llamar a send report con el mensaje generado con json y los números de teléfono
@@ -222,7 +222,7 @@ def manejar_alerta(claves, direccion, mensaje_alerta):
             phone_numbers = [all_phone_numbers['bomberos'], all_phone_numbers['carabineros']]
             send_report(title = title, summary = summary, phone_numbers = phone_numbers)
 
-        elif clave_inicio in ["A7","A,7","a7"]:
+        elif clave_inicio in ["A7","A,7","a7", "A, 7", "A-7", "A 7", "a 7", "a,7", "a-7"]:
             print("QUIMICOS llamar a bomberos y ambulancia")
             print(mensaje_alerta)
             # Llamar a send report con el mensaje generado con json y los números de teléfono
