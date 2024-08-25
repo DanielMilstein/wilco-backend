@@ -16,3 +16,4 @@ twilio
 django-environ
 boto3
 s3
+langchain_openai

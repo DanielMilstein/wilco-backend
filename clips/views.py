@@ -4,6 +4,37 @@ from rest_framework.response import Response
 from .models import Clip
 from .serializers import ClipSerializer
 from django.shortcuts import render
+import os
+from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
+from langchain_core.prompts import MessagesPlaceholder, HumanMessagePromptTemplate, ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langsmith import traceable
+
+
+
+model = ChatOpenAI(model="gpt-4o-mini")
+history = [
+    AIMessage(content="Entendido, estoy listo para clasificar los mensajes."),
+]
+
+messages = [
+    SystemMessage(content=(
+        "Tu tarea es clasificar el mensaje basado en la presencia de ciertas claves. "
+        "Clasifica el mensaje de la siguiente manera: "
+        "Devuelve '0' si el mensaje contiene tanto una clave de inicio (R20, R22, A7) como la clave de fin (E1). "
+        "Devuelve '1' si el mensaje contiene solo una clave de inicio (R20, R22, A7) pero no contiene la clave de fin (E1). "
+        "Devuelve '2' si el mensaje contiene solo la clave de fin (E1) pero no contiene ninguna clave de inicio (R20, R22, A7). "
+        "Devuelve '3' si el mensaje no contiene ninguna de las claves mencionadas."
+    )),
+    MessagesPlaceholder(variable_name="history"),
+    HumanMessagePromptTemplate.from_template("{user_message}"),
+]
+
+
+chain = ChatPromptTemplate.from_messages(messages) | model | StrOutputParser()
+
 
 
 

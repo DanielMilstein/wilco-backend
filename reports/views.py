@@ -186,7 +186,8 @@ def api_create_report_objective(request):
 @api_view(['POST'])
 def api_send_report(request):
     if request.method == 'POST':
-        disclaimer = 'The TTS voice you are hearing is AI-generated and not a human voice.'
+        # disclaimer = 'The TTS voice you are hearing is AI-generated and not a human voice.'
+        disclaimer = 'La voz TTS que está escuchando es generada por IA y no es una voz humana.'
 
         response = client.audio.speech.create(
             model = 'tts-1-hd',
@@ -218,4 +219,4 @@ def api_send_report(request):
             
 
 
-    return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_200_OK)
