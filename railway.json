@@ -4,7 +4,7 @@
         "builder": "NIXPACKS"
     },
     "deploy": {
-        "startCommand": "npm install concurrently --save-dev && python manage.py migrate && python manage.py collectstatic --noinput && npm run start",
+        "startCommand": "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn --timeout 500 main.wsgi",
         "restartPolicyType": "NEVER",
         "restartPolicyMaxRetries": 10
     }
