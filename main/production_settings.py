@@ -136,3 +136,16 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+
+TWILIO_ACCOUNT_SID = os.environ["MY_ACCOUNT_SID"]
+TWILIO_AUTH_TOKEN = os.environ["TWILIO_AUTH_TOKEN"]
+TWILIO_NUMBER = os.environ["MY_TWILIO_NUMBER"]
+SMS_BROADCAST_TO_NUMBERS = [
+   "+56968404532",
+ ]
+
+SMS_BACKEND = 'sms.backends.twilio.SmsBackend'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')

@@ -3,7 +3,7 @@ Django
 django-cors-headers==4.2.0
 djangorestframework==3.14.0
 gunicorn==21.2.0
-packaging==23.1
+packaging
 psycopg2==2.9.6
 pytz==2023.3
 sqlparse==0.4.4
@@ -12,3 +12,9 @@ whitenoise==6.5.0
 psycopg2-binary
 django_seed
 openai
+twilio 
+django-environ
+boto3
+s3
+langchain_openai
+what3words

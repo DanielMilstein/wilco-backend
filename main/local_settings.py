@@ -127,3 +127,15 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_REDIRECT_URL = 'home'  # Redirect to home after login
 LOGOUT_REDIRECT_URL = 'home'  # Redirect to home after logout
+
+
+TWILIO_ACCOUNT_SID = os.environ["MY_ACCOUNT_SID"]
+TWILIO_AUTH_TOKEN = os.environ["TWILIO_AUTH_TOKEN"]
+TWILIO_NUMBER = os.environ["MY_TWILIO_NUMBER"]
+SMS_BROADCAST_TO_NUMBERS = [
+   "+56968404532",
+ ]
+
+SMS_BACKEND = 'sms.backends.twilio.SmsBackend'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
