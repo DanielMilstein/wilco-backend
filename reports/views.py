@@ -231,7 +231,7 @@ def send_report(title, summary, phone_numbers):
 
     response = client.audio.speech.create(
         model = 'tts-1-hd',
-        voice = 'onyx',
+        voice = 'echo',
         input = disclaimer + summary
     )
 
