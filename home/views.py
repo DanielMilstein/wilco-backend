@@ -8,7 +8,7 @@ from rest_framework.response import Response
 import requests
 # Create your views here.
 
-API_KEY = '31PTULZ0'
+API_KEY = 'NAaaaaa'
 W3W_API_URL = 'https://api.what3words.com/v3/'
 geocoder = what3words.Geocoder(API_KEY)
 
